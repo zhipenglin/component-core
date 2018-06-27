@@ -1,0 +1,12 @@
+{
+  "name": "ic-cache",
+  "version": "2.0.0-alpha",
+  "description": "操作localstore",
+  "target": "client",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "admin",
+  "license": "ISC"
+}

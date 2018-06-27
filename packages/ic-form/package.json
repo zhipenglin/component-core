@@ -1,0 +1,15 @@
+{
+  "name": "ic-form",
+  "version": "2.0.0-alpha",
+  "description": "用于表单校验的组件",
+  "target": "client",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "admin",
+  "license": "ISC",
+  "dependencies": {
+    "ic-cache": "^2.0.0-alpha"
+  }
+}

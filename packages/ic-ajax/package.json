@@ -1,0 +1,18 @@
+{
+  "name": "ic-ajax",
+  "version": "2.0.0-alpha",
+  "description": "用于发送ajax请求",
+  "target": "client",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "admin",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "ic-ajax-error": "^2.0.0-alpha",
+    "lodash": "^4.17.10",
+    "qs": "^6.5.2"
+  }
+}

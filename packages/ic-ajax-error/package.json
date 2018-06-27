@@ -1,0 +1,12 @@
+{
+  "name": "ic-ajax-error",
+  "version": "2.0.0-alpha",
+  "description": "处理ajax错误",
+  "target": "client",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "admin",
+  "license": "ISC"
+}
