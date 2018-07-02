@@ -1,0 +1,96 @@
+import ajaxError from '../src/index';
+
+describe('ic-ajax-error',()=>{
+    it('正常请求返回',()=>{
+        expect(ajaxError({
+            status:200,
+            data:{
+                err_no:0,
+                results:{}
+            }
+        })).toBe('');
+    });
+    it('无对应错误码',()=>{
+        expect(ajaxError({
+            status:456
+        })).toBe('连接出错');
+    });
+    it('404返回',()=>{
+        expect(ajaxError({
+            status:404
+        })).toBe('请求出错');
+    });
+
+    it('500返回',()=>{
+        expect(ajaxError({
+            status:200,
+            data:{
+                err_no:500,
+                err_msg:'请求参数错误',
+                results:{}
+            }
+        })).toBe('请求参数错误');
+    });
+    it('无明确错误返回',()=>{
+        expect(ajaxError({
+            status:200,
+            data:{
+                err_no:500
+            }
+        })).toBe('很抱歉，出错了，请重试~');
+    });
+    it('无明确错误返回，但传入了默认错误',()=>{
+        expect(ajaxError({
+            status:200,
+            data:{
+                err_no:500
+            }
+        },'我是默认错误')).toBe('我是默认错误');
+    });
+
+    it('复合请求返回',()=>{
+        expect(ajaxError({
+            status:200,
+            data:{
+                1:{
+                    err_no:500,
+                    err_msg:'接口请求失败'
+                },
+                2:{
+                    err_no:0,
+                    results:{}
+                },
+                3:{
+                    err_no:500,
+                    err_msg:'接口请求太失败了'
+                }
+            }
+        })).toBe('接口请求失败 接口请求太失败了');
+    });
+
+    it('复合错误返回',()=>{
+        expect(ajaxError({
+            status:200,
+            data:{
+                err_no:500,
+                results:{
+                    1:'接口请求失败',
+                    2:'接口请求失败2'
+                }
+            }
+        })).toBe('接口请求失败 接口请求失败2');
+    });
+    it('复合错误返回,存在非string的值',()=>{
+        expect(ajaxError({
+            status:200,
+            data:{
+                err_no:500,
+                results:{
+                    1:'接口请求失败',
+                    2:'接口请求失败2',
+                    3:['哈哈']
+                }
+            }
+        })).toBe('接口请求失败 接口请求失败2');
+    });
+});

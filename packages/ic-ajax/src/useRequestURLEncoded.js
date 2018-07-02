@@ -5,9 +5,9 @@ import qs from "qs";
 export default (config)=>{
     const headers = merge(
         {},
-        config.headers.common || {},
-        config.headers[config.method] || {},
-        config.headers || {}
+        config.headers.common,
+        config.headers[config.method],
+        config.headers
     );
     normalizeHeaderName(headers, 'Content-Type');
 
