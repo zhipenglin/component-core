@@ -1,6 +1,6 @@
 {
   "name": "ic-form",
-  "version": "2.0.0-alpha-7",
+  "version": "2.0.0-alpha-8",
   "description": "用于表单校验的组件",
   "target": "client",
   "main": "dist/index.js",
@@ -10,6 +10,6 @@
   "author": "admin",
   "license": "ISC",
   "dependencies": {
-    "ic-cache": "^2.0.0-alpha-7"
+    "ic-cache": "^2.0.0-alpha-8"
   }
 }
