@@ -1,7 +1,7 @@
 {
-  "name": "ic-cache",
+  "name": "ic-animate",
   "version": "2.1.5-alpha",
-  "description": "操作localstore",
+  "description": "实现react动画",
   "target": "client",
   "main": "dist/index.js",
   "scripts": {
