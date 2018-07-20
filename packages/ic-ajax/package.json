@@ -1,6 +1,6 @@
 {
   "name": "ic-ajax",
-  "version": "2.1.6",
+  "version": "2.1.7-alpha",
   "description": "用于发送ajax请求",
   "target": "client",
   "main": "dist/index.js",
@@ -11,7 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.18.0",
-    "ic-ajax-error": "^2.1.6",
+    "ic-ajax-error": "^2.1.7-alpha",
     "lodash": "^4.17.10",
     "qs": "^6.5.2"
   }
