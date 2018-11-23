@@ -4,6 +4,10 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
+var _promise = require('babel-runtime/core-js/promise');
+
+var _promise2 = _interopRequireDefault(_promise);
+
 var _regenerator = require('babel-runtime/regenerator');
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
@@ -24,14 +28,16 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var compileRule = function compileRule(rule, rules) {
     return function () {
-        var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(value, errMsg) {
+        var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(value, errMsg, data) {
             var errorMsg, result, ruleList, index, stc, _stc$split, _stc$split2, key, args, res;
 
             return _regenerator2.default.wrap(function _callee$(_context) {
                 while (1) {
                     switch (_context.prev = _context.next) {
                         case 0:
-                            errorMsg = '', result = true, ruleList = rule.split(' ');
+                            errorMsg = '', result = true, ruleList = rule.split(' ').filter(function (str) {
+                                return str.length > 0;
+                            });
                             index = 0;
 
                         case 2:
@@ -49,7 +55,7 @@ var compileRule = function compileRule(rule, rules) {
                             }
 
                             _context.next = 8;
-                            return rules[key].apply(rules, [value].concat((0, _toConsumableArray3.default)(args)));
+                            return rules[key].apply(rules, [value].concat((0, _toConsumableArray3.default)(args), [data]));
 
                         case 8:
                             res = _context.sent;
@@ -87,7 +93,7 @@ var compileRule = function compileRule(rule, rules) {
             }, _callee, undefined);
         }));
 
-        return function (_x, _x2) {
+        return function (_x, _x2, _x3) {
             return _ref.apply(this, arguments);
         };
     }();
@@ -97,19 +103,20 @@ exports.default = function (value, _ref2) {
     var rule = _ref2.rule,
         rules = _ref2.rules,
         _ref2$errMsg = _ref2.errMsg,
-        errMsg = _ref2$errMsg === undefined ? '' : _ref2$errMsg;
+        errMsg = _ref2$errMsg === undefined ? '' : _ref2$errMsg,
+        data = _ref2.data;
 
     if (rule instanceof RegExp) {
-        return { result: rule.test(value), errMsg: errMsg };
+        return _promise2.default.resolve({ result: rule.test(value), errMsg: errMsg });
     }
 
     if (typeof rule === 'function') {
-        return { result: rule(value), errMsg: errMsg };
+        return _promise2.default.resolve({ result: rule(value, data), errMsg: errMsg });
     }
 
     if (typeof rule === 'string') {
-        return compileRule(rule, rules)(value, errMsg);
+        return compileRule(rule, rules)(value, errMsg, data);
     }
 
-    return { result: true, errMsg: '' };
+    return _promise2.default.resolve({ result: true, errMsg: '' });
 };

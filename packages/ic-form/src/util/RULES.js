@@ -15,25 +15,34 @@ const RULES = {
         }
     },
     NAME: function (value) {
+        if (!RULES.REQ(value).result) return {result: true, errMsg: ''};
         return {
-            result: !!value && /^[A-Za-z\u4e00-\u9fa5]+$/.test(value),
+            result: /^[A-Za-z\u4e00-\u9fa5]+$/.test(value),
             errMsg: '请填写有效姓名'
         }
     },
     TEL: function (value) {
+        if (!RULES.REQ(value).result) return {result: true, errMsg: ''};
         return {
             result: /^1[0-9]{10}$/.test(value),
             errMsg: '请输入有效的手机号'
         }
     },
     EMAIL: function (value) {
+        if (!RULES.REQ(value).result) return {result: true, errMsg: ''};
         return {
             result: /^([a-zA-Z0-9_.\-])+@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/.test(value),
             errMsg: '请输入有效的邮箱'
         }
     },
     LEN: function (value, start, end) {
+        if (!RULES.REQ(value).result) return {result: true, errMsg: ''};
         value = value.toString();
+        if (end === start && value.length !== Number(end)) {
+            return {
+                result: false, errMsg: `%s长度必须等于${end}`
+            };
+        }
         if (value.length < start) {
             return {
                 result: false, errMsg: `%s长度必须大于${start}`

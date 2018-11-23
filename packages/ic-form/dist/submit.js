@@ -36,30 +36,30 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
-var _Context = require('./Context');
+var _withFormData = require('./withFormData');
 
-var _Context2 = _interopRequireDefault(_Context);
+var _withFormData2 = _interopRequireDefault(_withFormData);
+
+var _icCompose = require('ic-compose');
+
+var _icCompose2 = _interopRequireDefault(_icCompose);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-exports.default = function (WrappedComponent) {
-    var Submit = function (_PureComponent) {
+exports.default = (0, _icCompose2.default)(_withFormData2.default, function (WrappedComponent) {
+    return function (_PureComponent) {
         (0, _inherits3.default)(Submit, _PureComponent);
 
-        function Submit() {
-            var _ref;
-
-            var _temp, _this, _ret;
-
+        function Submit(props) {
             (0, _classCallCheck3.default)(this, Submit);
 
-            for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-                args[_key] = arguments[_key];
-            }
+            var _this = (0, _possibleConstructorReturn3.default)(this, (Submit.__proto__ || (0, _getPrototypeOf2.default)(Submit)).call(this, props));
 
-            return _ret = (_temp = (_this = (0, _possibleConstructorReturn3.default)(this, (_ref = Submit.__proto__ || (0, _getPrototypeOf2.default)(Submit)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
+            _this.state = {
                 isLoading: false
-            }, _this.handlerClick = function (e) {
+            };
+
+            _this.handlerClick = function (e) {
                 var _this$props = _this.props,
                     onClick = _this$props.onClick,
                     api = _this$props.api;
@@ -70,31 +70,30 @@ exports.default = function (WrappedComponent) {
                 onClick && onClick(e);
                 _this.setState({ isLoading: true });
                 api.submit().then(function () {
-                    return _this.setState({ isLoading: false });
+                    return _this.isUnmount === false && _this.setState({ isLoading: false });
                 });
-            }, _temp), (0, _possibleConstructorReturn3.default)(_this, _ret);
+            };
+
+            _this.isUnmount = false;
+            return _this;
         }
 
         (0, _createClass3.default)(Submit, [{
+            key: 'componentWillUnmount',
+            value: function componentWillUnmount() {
+                this.isUnmount = true;
+            }
+        }, {
             key: 'render',
             value: function render() {
                 var _props = this.props,
                     api = _props.api,
                     props = (0, _objectWithoutProperties3.default)(_props, ['api']);
 
-                return _react2.default.createElement(WrappedComponent, (0, _extends3.default)({}, props, { data: api.data, isLoading: this.state.isLoading, isPass: api.isPass, onClick: this.handlerClick }));
+                return _react2.default.createElement(WrappedComponent, (0, _extends3.default)({}, props, { data: api.data, isLoading: this.state.isLoading, isPass: api.isPass,
+                    onClick: this.handlerClick }));
             }
         }]);
         return Submit;
     }(_react.PureComponent);
-
-    return function (props) {
-        return _react2.default.createElement(
-            _Context2.default.Consumer,
-            null,
-            function (fieldProps) {
-                return _react2.default.createElement(Submit, (0, _extends3.default)({}, props, { api: fieldProps }));
-            }
-        );
-    };
-};
+});

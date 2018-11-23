@@ -52,9 +52,9 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
-var _Context = require('./Context');
+var _withFormData = require('./withFormData');
 
-var _Context2 = _interopRequireDefault(_Context);
+var _withFormData2 = _interopRequireDefault(_withFormData);
 
 var _RULES = require('./util/RULES');
 
@@ -72,10 +72,24 @@ var _OrderPromise = require('./util/OrderPromise');
 
 var _OrderPromise2 = _interopRequireDefault(_OrderPromise);
 
+var _getFieldValue = require('./util/getFieldValue');
+
+var _getFieldValue2 = _interopRequireDefault(_getFieldValue);
+
+var _icCompose = require('ic-compose');
+
+var _icCompose2 = _interopRequireDefault(_icCompose);
+
+var _propTypes = require('prop-types');
+
+var _propTypes2 = _interopRequireDefault(_propTypes);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-exports.default = function (WrappedComponent) {
-    var Field = function (_PureComponent) {
+exports.default = (0, _icCompose2.default)(_withFormData2.default, function (WrappedComponent) {
+    var _class, _temp2;
+
+    return _temp2 = _class = function (_PureComponent) {
         (0, _inherits3.default)(Field, _PureComponent);
 
         function Field() {
@@ -93,7 +107,7 @@ exports.default = function (WrappedComponent) {
             return _ret = (_temp = (_this = (0, _possibleConstructorReturn3.default)(this, (_ref = Field.__proto__ || (0, _getPrototypeOf2.default)(Field)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
                 errorState: 0,
                 errorMsg: ''
-            }, _this.orderPromise = new _OrderPromise2.default(), _this.validateChange = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee() {
+            }, _this.orderPromise = new _OrderPromise2.default(), _this.runValidate = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee() {
                 var _this$props, name, api, label, value, newValue, res;
 
                 return _regenerator2.default.wrap(function _callee$(_context) {
@@ -141,31 +155,32 @@ exports.default = function (WrappedComponent) {
                                 });
 
                             case 9:
-
-                                api.onValidateChange(name, {
-                                    result: res.result, errorMsg: _this.state.errorMsg
-                                });
                                 return _context.abrupt('return', res);
 
-                            case 11:
+                            case 10:
                             case 'end':
                                 return _context.stop();
                         }
                     }
                 }, _callee, _this2);
-            })), _this.handlerBlur = function (e) {
-                var onBlur = _this.props.onBlur;
-
-                onBlur && onBlur(e);
-                _this.validateChange();
-            }, _this.handlerChange = function (value) {
+            })), _this.validateChange = function () {
                 var _this$props2 = _this.props,
-                    name = _this$props2.name,
-                    onChange = _this$props2.onChange,
-                    api = _this$props2.api;
+                    api = _this$props2.api,
+                    name = _this$props2.name;
 
-                onChange && onChange(value);
-                api.onDataChange(name, value);
+                _this.runValidate().then(function (res) {
+                    api.onValidateChange(name, {
+                        result: res.result, errorMsg: _this.state.errorMsg
+                    });
+                });
+            }, _this.handlerChange = function (event, value) {
+                var _this$props3 = _this.props,
+                    name = _this$props3.name,
+                    onChange = _this$props3.onChange,
+                    api = _this$props3.api;
+
+                onChange && onChange(event, value);
+                api.onDataChange(name, (0, _getFieldValue2.default)(event, value)); //兼容以前api
             }, _temp), (0, _possibleConstructorReturn3.default)(_this, _ret);
         }
 
@@ -180,7 +195,7 @@ exports.default = function (WrappedComponent) {
                 var rules = (0, _assign2.default)({}, _RULES2.default, api.rules);
                 if (!this.validatePromise || this.prevValue !== value) {
                     this.validatePromise = (0, _validate3.default)(value, {
-                        rule: rule, rules: rules, errMsg: errMsg
+                        rule: rule, rules: rules, errMsg: errMsg, data: api.data
                     }).then(function (res) {
                         return res;
                     });
@@ -218,22 +233,22 @@ exports.default = function (WrappedComponent) {
                     props = (0, _objectWithoutProperties3.default)(_props4, ['name', 'rule', 'errMsg', 'api']);
 
                 return _react2.default.createElement(WrappedComponent, (0, _extends3.default)({}, props, { value: api.data[name],
+                    triggerValidate: this.validateChange,
+                    addEventListener: api.addEventListener,
+                    removeEventListener: api.removeEventListener,
                     errorState: this.state.errorState,
                     errorMsg: this.state.errorMsg,
-                    onChange: this.handlerChange,
-                    onBlur: this.handlerBlur }));
+                    onChange: this.handlerChange }));
             }
         }]);
         return Field;
-    }(_react.PureComponent);
-
-    return function (props) {
-        return _react2.default.createElement(
-            _Context2.default.Consumer,
-            null,
-            function (fieldProps) {
-                return _react2.default.createElement(Field, (0, _extends3.default)({}, props, { api: fieldProps }));
-            }
-        );
-    };
-};
+    }(_react.PureComponent), _class.defaultProps = {
+        label: '',
+        errMsg: ''
+    }, _class.propTypes = {
+        name: _propTypes2.default.string.isRequired,
+        label: _propTypes2.default.string,
+        errMsg: _propTypes2.default.string,
+        rule: _propTypes2.default.oneOfType([_propTypes2.default.string, _propTypes2.default.func, _propTypes2.default.instanceOf(RegExp)])
+    }, _temp2;
+});

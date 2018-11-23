@@ -4,25 +4,9 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _extends2 = require('babel-runtime/helpers/extends');
+var _toConsumableArray2 = require('babel-runtime/helpers/toConsumableArray');
 
-var _extends3 = _interopRequireDefault(_extends2);
-
-var _promise = require('babel-runtime/core-js/promise');
-
-var _promise2 = _interopRequireDefault(_promise);
-
-var _keys = require('babel-runtime/core-js/object/keys');
-
-var _keys2 = _interopRequireDefault(_keys);
-
-var _regenerator = require('babel-runtime/regenerator');
-
-var _regenerator2 = _interopRequireDefault(_regenerator);
-
-var _asyncToGenerator2 = require('babel-runtime/helpers/asyncToGenerator');
-
-var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
+var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
 
 var _defineProperty2 = require('babel-runtime/helpers/defineProperty');
 
@@ -31,6 +15,26 @@ var _defineProperty3 = _interopRequireDefault(_defineProperty2);
 var _assign = require('babel-runtime/core-js/object/assign');
 
 var _assign2 = _interopRequireDefault(_assign);
+
+var _extends2 = require('babel-runtime/helpers/extends');
+
+var _extends3 = _interopRequireDefault(_extends2);
+
+var _regenerator = require('babel-runtime/regenerator');
+
+var _regenerator2 = _interopRequireDefault(_regenerator);
+
+var _promise = require('babel-runtime/core-js/promise');
+
+var _promise2 = _interopRequireDefault(_promise);
+
+var _asyncToGenerator2 = require('babel-runtime/helpers/asyncToGenerator');
+
+var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
+
+var _keys = require('babel-runtime/core-js/object/keys');
+
+var _keys2 = _interopRequireDefault(_keys);
 
 var _getPrototypeOf = require('babel-runtime/core-js/object/get-prototype-of');
 
@@ -74,237 +78,120 @@ var _merge2 = _interopRequireDefault(_merge);
 
 var _icCache = require('ic-cache');
 
+var _propTypes = require('prop-types');
+
+var _propTypes2 = _interopRequireDefault(_propTypes);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var Form = function (_PureComponent) {
-    (0, _inherits3.default)(Form, _PureComponent);
+var Form = function (_Component) {
+    (0, _inherits3.default)(Form, _Component);
 
     function Form(props) {
-        var _this2 = this;
-
         (0, _classCallCheck3.default)(this, Form);
 
         var _this = (0, _possibleConstructorReturn3.default)(this, (Form.__proto__ || (0, _getPrototypeOf2.default)(Form)).call(this, props));
 
-        _this.state = {
-            isPass: false,
-            data: {}
-        };
-
-        _this.handlerDataChange = function (name, value) {
-            var _this$props = _this.props,
-                cache = _this$props.cache,
-                onDataChange = _this$props.onDataChange;
-
-            _this.setState({
-                data: (0, _cleanObject2.default)((0, _assign2.default)({}, _this.state.data, (0, _defineProperty3.default)({}, name, value)))
-            }, function () {
-                cache && (0, _icCache.setCache)('form-cache-' + cache, _this.state.data);
-                onDataChange && onDataChange(_this.state.data);
-            });
-        };
-
-        _this.handlerValidateChange = function () {
-            var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(name, res) {
-                var onValidate;
-                return _regenerator2.default.wrap(function _callee$(_context) {
-                    while (1) {
-                        switch (_context.prev = _context.next) {
-                            case 0:
-                                onValidate = _this.props.onValidate;
-
-                                _this.fieldList[name].info = res;
-                                _context.t0 = onValidate;
-
-                                if (!_context.t0) {
-                                    _context.next = 11;
-                                    break;
-                                }
-
-                                _context.t1 = onValidate;
-                                _context.next = 7;
-                                return _this.isPass();
-
-                            case 7:
-                                _context.t2 = _context.sent;
-                                _context.t3 = res;
-                                _context.t4 = _this.state.data;
-                                (0, _context.t1)(_context.t2, _context.t3, _context.t4);
-
-                            case 11:
-                            case 'end':
-                                return _context.stop();
-                        }
-                    }
-                }, _callee, _this2);
-            }));
-
-            return function (_x, _x2) {
-                return _ref.apply(this, arguments);
-            };
-        }();
-
-        _this.handlerFieldInstall = function (name, field) {
-            _this.fieldList[name] = { field: field, info: {} };
-        };
-
-        _this.handlerFieldUninstall = function (name) {
-            delete _this.fieldList[name];
-            _this.handlerDataChange(name, undefined);
-        };
-
-        _this.setData = function () {
-            var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-
-            _this.setState({ data: data }, function () {
-                return _this.isPass();
-            });
-        };
-
-        _this.getData = function () {
-            return _this.state.data;
-        };
-
-        _this.submit = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2() {
-            var _this$props2, onSubmit, onPrevSubmit, onError, cache, isPass, validateInfo;
-
-            return _regenerator2.default.wrap(function _callee2$(_context2) {
-                while (1) {
-                    switch (_context2.prev = _context2.next) {
-                        case 0:
-                            _this$props2 = _this.props;
-                            onSubmit = _this$props2.onSubmit;
-                            onPrevSubmit = _this$props2.onPrevSubmit;
-                            onError = _this$props2.onError;
-                            cache = _this$props2.cache;
-                            _context2.next = 7;
-                            return _this.isPass(true);
-
-                        case 7:
-                            isPass = _context2.sent;
-                            validateInfo = (0, _getFieldInfo2.default)(_this.fieldList);
-
-                            onPrevSubmit && onPrevSubmit(isPass, validateInfo, _this.state.data);
-
-                            if (isPass) {
-                                _context2.next = 13;
-                                break;
-                            }
-
-                            onError && onError(validateInfo);
-                            return _context2.abrupt('return');
-
-                        case 13:
-                            onSubmit(_this.state.data);
-                            cache && (0, _icCache.removeCache)('form-cache-' + cache);
-
-                        case 15:
-                        case 'end':
-                            return _context2.stop();
-                    }
-                }
-            }, _callee2, _this2);
-        }));
+        _initialiseProps.call(_this);
 
         _this.fieldList = {};
+        _this.eventList = {
+            submit: [],
+            prevSubmit: [],
+            error: [],
+            validate: [],
+            dataChange: []
+        };
+        var cache = props.cache,
+            data = props.data,
+            localData = (0, _icCache.getCache)('form-cache-' + cache),
+            newData = (0, _merge2.default)({}, data);
+
+        if (cache) {
+            (0, _merge2.default)(newData, localData);
+        }
+        if ((0, _keys2.default)(newData).length > 0) {
+            _this.state = {
+                isPass: false,
+                data: newData
+            };
+        }
         return _this;
     }
 
     (0, _createClass3.default)(Form, [{
-        key: 'componentDidMount',
-        value: function componentDidMount() {
-            var _props = this.props,
-                cache = _props.cache,
-                data = _props.data;
-
-            var localData = (0, _icCache.getCache)('form-cache-' + cache);
-            var newData = (0, _merge2.default)({}, data);
-            if (cache) {
-                (0, _merge2.default)(newData, localData);
-            }
-
-            if ((0, _keys2.default)(newData).length > 0) {
-                this.setData(newData);
-            }
-        }
-    }, {
         key: 'isPass',
         value: function () {
-            var _ref3 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee4() {
-                var _this3 = this;
+            var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2() {
+                var _this2 = this;
 
                 var isForce = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
                 var isPass;
-                return _regenerator2.default.wrap(function _callee4$(_context4) {
+                return _regenerator2.default.wrap(function _callee2$(_context2) {
                     while (1) {
-                        switch (_context4.prev = _context4.next) {
+                        switch (_context2.prev = _context2.next) {
                             case 0:
                                 isPass = true;
-                                _context4.next = 3;
+                                _context2.next = 3;
                                 return _promise2.default.all((0, _keys2.default)(this.fieldList).map(function () {
-                                    var _ref4 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee3(name) {
-                                        var _fieldList$name, field, info;
+                                    var _ref2 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(name) {
+                                        var _fieldList$name, field, info, res;
 
-                                        return _regenerator2.default.wrap(function _callee3$(_context3) {
+                                        return _regenerator2.default.wrap(function _callee$(_context) {
                                             while (1) {
-                                                switch (_context3.prev = _context3.next) {
+                                                switch (_context.prev = _context.next) {
                                                     case 0:
-                                                        _fieldList$name = _this3.fieldList[name], field = _fieldList$name.field, info = _fieldList$name.info;
+                                                        _fieldList$name = _this2.fieldList[name], field = _fieldList$name.field, info = _fieldList$name.info;
 
-                                                        if (!(isForce || info.result === undefined)) {
-                                                            _context3.next = 9;
+                                                        if (!isForce) {
+                                                            _context.next = 8;
                                                             break;
                                                         }
 
-                                                        _context3.next = 4;
-                                                        return field.validateChange(_this3.state.data[name]);
+                                                        _context.next = 4;
+                                                        return field.runValidate(_this2.state.data[name]);
 
                                                     case 4:
-                                                        _context3.t0 = _context3.sent.result;
+                                                        res = _this2.fieldList[name].info = _context.sent;
 
-                                                        if (!(_context3.t0 === false)) {
-                                                            _context3.next = 7;
-                                                            break;
+                                                        if (res.result === false) {
+                                                            isPass = false;
                                                         }
-
-                                                        isPass = false;
-
-                                                    case 7:
-                                                        _context3.next = 10;
+                                                        _context.next = 9;
                                                         break;
 
-                                                    case 9:
-                                                        if (info.result === false) {
+                                                    case 8:
+                                                        if (info.result === false || info.result === undefined) {
                                                             isPass = false;
                                                         }
 
-                                                    case 10:
+                                                    case 9:
                                                     case 'end':
-                                                        return _context3.stop();
+                                                        return _context.stop();
                                                 }
                                             }
-                                        }, _callee3, _this3);
+                                        }, _callee, _this2);
                                     }));
 
-                                    return function (_x5) {
-                                        return _ref4.apply(this, arguments);
+                                    return function (_x2) {
+                                        return _ref2.apply(this, arguments);
                                     };
                                 }()));
 
                             case 3:
                                 this.setState({ isPass: isPass });
-                                return _context4.abrupt('return', isPass);
+                                return _context2.abrupt('return', isPass);
 
                             case 5:
                             case 'end':
-                                return _context4.stop();
+                                return _context2.stop();
                         }
                     }
-                }, _callee4, this);
+                }, _callee2, this);
             }));
 
             function isPass() {
-                return _ref3.apply(this, arguments);
+                return _ref.apply(this, arguments);
             }
 
             return isPass;
@@ -312,9 +199,9 @@ var Form = function (_PureComponent) {
     }, {
         key: 'render',
         value: function render() {
-            var _props2 = this.props,
-                rules = _props2.rules,
-                children = _props2.children;
+            var _props = this.props,
+                rules = _props.rules,
+                children = _props.children;
 
             return _react2.default.createElement(
                 _Context2.default.Provider,
@@ -323,6 +210,8 @@ var Form = function (_PureComponent) {
                         rules: rules,
                         isPass: this.state.isPass,
                         submit: this.submit,
+                        addEventListener: this.addEventListener,
+                        removeEventListener: this.removeEventListener,
                         onFieldInstall: this.handlerFieldInstall,
                         onFieldUninstall: this.handlerFieldUninstall,
                         onDataChange: this.handlerDataChange,
@@ -333,82 +222,276 @@ var Form = function (_PureComponent) {
         }
     }]);
     return Form;
-}(_react.PureComponent);
+}(_react.Component);
 
-var FormApi = function (_PureComponent2) {
-    (0, _inherits3.default)(FormApi, _PureComponent2);
+Form.propTypes = {
+    onSubmit: _propTypes2.default.func.isRequired,
+    onPrevSubmit: _propTypes2.default.func,
+    onError: _propTypes2.default.func,
+    cache: _propTypes2.default.string,
+    data: _propTypes2.default.object,
+    rules: _propTypes2.default.object
+};
 
-    function FormApi() {
-        var _ref5,
-            _this5 = this;
+var _initialiseProps = function _initialiseProps() {
+    var _this5 = this;
 
-        var _temp, _this4, _ret;
+    this.handlerDataChange = function (name, value) {
+        var _props2 = _this5.props,
+            cache = _props2.cache,
+            onDataChange = _props2.onDataChange;
 
-        (0, _classCallCheck3.default)(this, FormApi);
+        _this5.setState(function (_ref6) {
+            var data = _ref6.data;
 
-        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-            args[_key] = arguments[_key];
-        }
+            var newData = (0, _cleanObject2.default)((0, _assign2.default)({}, data, (0, _defineProperty3.default)({}, name, value)));
+            return { data: newData };
+        }, function () {
+            cache && (0, _icCache.setCache)('form-cache-' + cache, _this5.state.data);
+            onDataChange && onDataChange(_this5.state.data);
+            _this5.eventList.dataChange.forEach(function (callback) {
+                return callback(_this5.state.data);
+            });
+        });
+    };
 
-        return _ret = (_temp = (_this4 = (0, _possibleConstructorReturn3.default)(this, (_ref5 = FormApi.__proto__ || (0, _getPrototypeOf2.default)(FormApi)).call.apply(_ref5, [this].concat(args))), _this4), _this4.submit = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee5() {
+    this.handlerValidateChange = function () {
+        var _ref7 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee5(name, res) {
+            var onValidate, pass, validateInfo;
             return _regenerator2.default.wrap(function _callee5$(_context5) {
                 while (1) {
                     switch (_context5.prev = _context5.next) {
                         case 0:
-                            _context5.next = 2;
-                            return _this4.form.submit();
+                            onValidate = _this5.props.onValidate;
 
-                        case 2:
-                            return _context5.abrupt('return', _this4);
+                            _this5.fieldList[name].info = res;
+                            _context5.next = 4;
+                            return _this5.isPass();
 
-                        case 3:
+                        case 4:
+                            pass = _context5.sent;
+                            validateInfo = (0, _getFieldInfo2.default)(_this5.fieldList);
+
+                            onValidate && onValidate(pass, validateInfo, _this5.state.data);
+                            _this5.eventList.validate.forEach(function (callback) {
+                                return callback(pass, validateInfo, _this5.state.data);
+                            });
+
+                        case 8:
                         case 'end':
                             return _context5.stop();
                     }
                 }
             }, _callee5, _this5);
-        })), _this4.setError = function () {
-            var _ref7 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee6(name, _ref8) {
-                var _ref8$result = _ref8.result,
-                    result = _ref8$result === undefined ? true : _ref8$result,
-                    _ref8$errMsg = _ref8.errMsg,
-                    errMsg = _ref8$errMsg === undefined ? '' : _ref8$errMsg;
-                return _regenerator2.default.wrap(function _callee6$(_context6) {
+        }));
+
+        return function (_x5, _x6) {
+            return _ref7.apply(this, arguments);
+        };
+    }();
+
+    this.handlerFieldInstall = function (name, field) {
+        _this5.fieldList[name] = { field: field, info: {} };
+        //为了保证表单初始化后，isPass是一个正确的值
+        field.validate(_this5.state.data[name]).then(function (res) {
+            if (res.result === true) {
+                _this5.fieldList[name].info = { result: true };
+            }
+            return _this5.isPass();
+        });
+    };
+
+    this.handlerFieldUninstall = function (name) {
+        delete _this5.fieldList[name];
+
+        _this5.setState(function (_ref8) {
+            var data = _ref8.data;
+
+            delete data[name];
+            return { data: data };
+        });
+        _this5.handlerDataChange(name, undefined);
+    };
+
+    this.setData = function () {
+        var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+        _this5.setState({ data: data });
+    };
+
+    this.getData = function () {
+        return _this5.state.data;
+    };
+
+    this.submit = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee7() {
+        var _props3, onSubmit, onPrevSubmit, onError, cache, isPass, validateInfo;
+
+        return _regenerator2.default.wrap(function _callee7$(_context7) {
+            while (1) {
+                switch (_context7.prev = _context7.next) {
+                    case 0:
+                        _props3 = _this5.props;
+                        onSubmit = _props3.onSubmit;
+                        onPrevSubmit = _props3.onPrevSubmit;
+                        onError = _props3.onError;
+                        cache = _props3.cache;
+                        _context7.next = 7;
+                        return _this5.isPass(true);
+
+                    case 7:
+                        isPass = _context7.sent;
+                        validateInfo = (0, _getFieldInfo2.default)(_this5.fieldList);
+
+                        onPrevSubmit && onPrevSubmit(isPass, validateInfo, _this5.state.data);
+                        _this5.eventList.prevSubmit.forEach(function (callback) {
+                            return callback(isPass, validateInfo, _this5.state.data);
+                        });
+
+                        if (isPass) {
+                            _context7.next = 15;
+                            break;
+                        }
+
+                        onError && onError(validateInfo);
+                        _this5.eventList.error.forEach(function (callback) {
+                            return callback(validateInfo, _this5.state.data);
+                        });
+                        return _context7.abrupt('return');
+
+                    case 15:
+                        _context7.next = 17;
+                        return _promise2.default.all([_promise2.default.resolve(onSubmit(_this5.state.data))].concat((0, _toConsumableArray3.default)(_this5.eventList.submit.map(function () {
+                            var _ref10 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee6(callback) {
+                                return _regenerator2.default.wrap(function _callee6$(_context6) {
+                                    while (1) {
+                                        switch (_context6.prev = _context6.next) {
+                                            case 0:
+                                                _context6.next = 2;
+                                                return callback(_this5.state.data);
+
+                                            case 2:
+                                                return _context6.abrupt('return', _context6.sent);
+
+                                            case 3:
+                                            case 'end':
+                                                return _context6.stop();
+                                        }
+                                    }
+                                }, _callee6, _this5);
+                            }));
+
+                            return function (_x8) {
+                                return _ref10.apply(this, arguments);
+                            };
+                        }()))));
+
+                    case 17:
+                        cache && (0, _icCache.removeCache)('form-cache-' + cache);
+
+                    case 18:
+                    case 'end':
+                        return _context7.stop();
+                }
+            }
+        }, _callee7, _this5);
+    }));
+
+    this.addEventListener = function (name, callback) {
+        var eventList = _this5.eventList[name];
+        Array.isArray(eventList) && eventList.push(callback);
+    };
+
+    this.removeEventListener = function (name, callback) {
+        var eventList = _this5.eventList[name];
+        if (Array.isArray(eventList)) {
+            var index = eventList.indexOf(callback);
+            index > -1 && eventList.splice(index, 1);
+        }
+    };
+};
+
+var FormApi = function (_PureComponent) {
+    (0, _inherits3.default)(FormApi, _PureComponent);
+
+    function FormApi(props) {
+        var _this4 = this;
+
+        (0, _classCallCheck3.default)(this, FormApi);
+
+        var _this3 = (0, _possibleConstructorReturn3.default)(this, (FormApi.__proto__ || (0, _getPrototypeOf2.default)(FormApi)).call(this, props));
+
+        _this3.setValue = function (name, value) {
+            _this3.formRef.current.handlerDataChange(name, value);
+        };
+
+        _this3.forceValidate = function () {
+            _this3.formRef.current.isPass(true);
+        };
+
+        _this3.submit = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee3() {
+            return _regenerator2.default.wrap(function _callee3$(_context3) {
+                while (1) {
+                    switch (_context3.prev = _context3.next) {
+                        case 0:
+                            _context3.next = 2;
+                            return _this3.formRef.current.submit();
+
+                        case 2:
+                            return _context3.abrupt('return', _this3);
+
+                        case 3:
+                        case 'end':
+                            return _context3.stop();
+                    }
+                }
+            }, _callee3, _this4);
+        }));
+
+        _this3.setError = function () {
+            var _ref4 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee4(name, _ref5) {
+                var _ref5$result = _ref5.result,
+                    result = _ref5$result === undefined ? true : _ref5$result,
+                    _ref5$errMsg = _ref5.errMsg,
+                    errMsg = _ref5$errMsg === undefined ? '' : _ref5$errMsg;
+                return _regenerator2.default.wrap(function _callee4$(_context4) {
                     while (1) {
-                        switch (_context6.prev = _context6.next) {
+                        switch (_context4.prev = _context4.next) {
                             case 0:
-                                _context6.next = 2;
-                                return _this4.form.handlerValidateChange(name, { result: result, errMsg: errMsg });
+                                _context4.next = 2;
+                                return _this3.formRef.current.handlerValidateChange(name, { result: result, errMsg: errMsg });
 
                             case 2:
-                                return _context6.abrupt('return', _this4);
+                                return _context4.abrupt('return', _this3);
 
                             case 3:
                             case 'end':
-                                return _context6.stop();
+                                return _context4.stop();
                         }
                     }
-                }, _callee6, _this5);
+                }, _callee4, _this4);
             }));
 
-            return function (_x6, _x7) {
-                return _ref7.apply(this, arguments);
+            return function (_x3, _x4) {
+                return _ref4.apply(this, arguments);
             };
-        }(), _temp), (0, _possibleConstructorReturn3.default)(_this4, _ret);
+        }();
+
+        _this3.formRef = _react2.default.createRef();
+        return _this3;
     }
 
     (0, _createClass3.default)(FormApi, [{
         key: 'render',
         value: function render() {
-            return _react2.default.createElement(Form, (0, _extends3.default)({}, this.props, { ref: this.form }));
+            return _react2.default.createElement(Form, (0, _extends3.default)({}, this.props, { ref: this.formRef }));
         }
     }, {
         key: 'data',
         set: function set(value) {
-            this.form.setData(value);
+            this.formRef.current.setData(value);
         },
         get: function get() {
-            return this.form.getData();
+            return this.formRef.current.getData();
         }
     }]);
     return FormApi;

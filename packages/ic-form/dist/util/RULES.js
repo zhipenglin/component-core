@@ -38,25 +38,34 @@ var RULES = {
         };
     },
     NAME: function NAME(value) {
+        if (!RULES.REQ(value).result) return { result: true, errMsg: '' };
         return {
-            result: !!value && /^[A-Za-z\u4e00-\u9fa5]+$/.test(value),
+            result: /^[A-Za-z\u4e00-\u9fa5]+$/.test(value),
             errMsg: '请填写有效姓名'
         };
     },
     TEL: function TEL(value) {
+        if (!RULES.REQ(value).result) return { result: true, errMsg: '' };
         return {
             result: /^1[0-9]{10}$/.test(value),
             errMsg: '请输入有效的手机号'
         };
     },
     EMAIL: function EMAIL(value) {
+        if (!RULES.REQ(value).result) return { result: true, errMsg: '' };
         return {
             result: /^([a-zA-Z0-9_.\-])+@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/.test(value),
             errMsg: '请输入有效的邮箱'
         };
     },
     LEN: function LEN(value, start, end) {
+        if (!RULES.REQ(value).result) return { result: true, errMsg: '' };
         value = value.toString();
+        if (end === start && value.length !== Number(end)) {
+            return {
+                result: false, errMsg: '%s\u957F\u5EA6\u5FC5\u987B\u7B49\u4E8E' + end
+            };
+        }
         if (value.length < start) {
             return {
                 result: false, errMsg: '%s\u957F\u5EA6\u5FC5\u987B\u5927\u4E8E' + start

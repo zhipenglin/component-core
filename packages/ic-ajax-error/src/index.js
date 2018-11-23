@@ -18,7 +18,7 @@ const ERROR_MAP = {
     505: 'HTTP版本不受支持'
 };
 
-const getAjaxError = (data={}, defaultError = '很抱歉，出错了，请重试~') => {
+const getAjaxError = (data = {}, defaultError = '很抱歉，出错了，请重试~') => {
     let error = [];
 
     if (data.hasOwnProperty('err_no')) {
@@ -36,7 +36,7 @@ const getAjaxError = (data={}, defaultError = '很抱歉，出错了，请重试
     } else {
         Object.keys(data).forEach((key) => {
             const childrenData = data[key];
-            if (typeof childrenData === 'object' && childrenData.hasOwnProperty('err_no') && childrenData.err_no != '0') {
+            if (childrenData && typeof childrenData === 'object' && childrenData.hasOwnProperty('err_no') && childrenData.err_no != '0') {
                 error.push(getAjaxError(childrenData));
             }
         });

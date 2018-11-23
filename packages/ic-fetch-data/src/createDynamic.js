@@ -3,42 +3,47 @@ import axios from 'axios'
 import isEqual from 'lodash/isEqual'
 import hash from 'object-hash'
 
-class Cache{
-    static getId({url,params,data,method,baseURL,headers}){
-        return Symbol.for(hash({url,params,data,method,baseURL,headers}));
+class Cache {
+    static getId({url, params, data, method, baseURL, headers}) {
+        return Symbol.for(hash({url, params, data, method, baseURL, headers}));
     }
-    constructor(){
-        this.__cache={};
+
+    constructor() {
+        this.__cache = {};
     }
-    get allCache(){
-        return Object.assign({},this.__cache);
+
+    get allCache() {
+        return Object.assign({}, this.__cache);
     }
-    getCache(id){
-        if(typeof id!=='symbol'){
-            id=this.constructor.getId(id);
+
+    getCache(id) {
+        if (typeof id !== 'symbol') {
+            id = this.constructor.getId(id);
         }
         return this.__cache[id];
     }
-    append(key,value){
-        this.__cache[this.constructor.getId(key)]=value;
+
+    append(key, value) {
+        this.__cache[this.constructor.getId(key)] = value;
         return this;
     }
-    clean(){
-        this.__cache={};
+
+    clean() {
+        this.__cache = {};
         return this;
     }
 }
 
 let globCache = new Cache();
 
-const createDynamic=(currentCache,ajax)=>(WrappedComponent) => {
+const createDynamic = (currentCache, ajax) => (WrappedComponent) => {
     let ajaxWithCache = (props) => {
-        const cache=currentCache.getCache(props);
-        if(cache){
+        const cache = currentCache.getCache(props);
+        if (cache) {
             return cache;
-        }else{
-            const promise=ajax(props);
-            currentCache.append(props,promise);
+        } else {
+            const promise = ajax(props);
+            currentCache.append(props, promise);
             return promise;
         }
     };
@@ -46,7 +51,13 @@ const createDynamic=(currentCache,ajax)=>(WrappedComponent) => {
         static defaultProps = {
             loading: null,
             error: null,
-            cache:false
+            cache: false,
+            getResults: (data) => {
+                if (data.hasOwnProperty('err_no') && data.hasOwnProperty('results')) {
+                    return {err_no: data.err_no, results: data.results};
+                }
+                return data;
+            }
         };
 
         constructor(props) {
@@ -64,26 +75,27 @@ const createDynamic=(currentCache,ajax)=>(WrappedComponent) => {
             this.setState({results});
         };
         getData = () => {
-            const {url, params, data, onError, onSuccess, onComplete, options,cache} = this.props;
-            this.setState({isError: false, isLoading: true});
+            const {url, params, data, onError, onStart, onSuccess, onComplete, options, cache} = this.props;
+            this.setState({isError: false, isLoading: true}, () => onStart && onStart());
             this.cancelHandler();
             let cancelToken = new axios.CancelToken((cancelHandler) => {
                 this.cancelHandler = cancelHandler
             });
-            (cache?ajaxWithCache:ajax)({
+            (cache ? ajaxWithCache : ajax)({
                 url, params, data, cancelToken, ...options
             }).then(({data}) => {
-                const {err_no, results} = data;
+                const {getResults} = this.props;
+                const {err_no, results} = getResults(data);
                 if (err_no == '0') {
                     this.setState({
-                        isLoading: false, results
+                        isLoading: false, results: results
                     });
                     onSuccess && onSuccess(data);
                 } else {
                     return Promise.reject(new Error(data));
                 }
             }).catch((e) => {
-                if(!axios.isCancel(e)){
+                if (!axios.isCancel(e)) {
                     onError && onError(e);
                     this.setState({isError: true});
                 }
@@ -121,11 +133,12 @@ const createDynamic=(currentCache,ajax)=>(WrappedComponent) => {
     }
 };
 
-export default (ajax)=>{
-    const dynamic=createDynamic(globCache,ajax);
-    dynamic.createCacheDynamic=(cache=new Cache())=>createDynamic(cache);
-    dynamic.Cache=Cache;
-    dynamic.cleanCache=()=>{
+export default (ajax) => {
+    const dynamic = createDynamic(globCache, ajax);
+    dynamic.createCacheDynamic = (cache = new Cache()) => createDynamic(cache);
+    dynamic.Cache = Cache;
+    dynamic.cleanCache = () => {
         globCache.clean();
     };
+    return dynamic;
 };

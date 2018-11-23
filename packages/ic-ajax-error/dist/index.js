@@ -65,7 +65,7 @@ var getAjaxError = function getAjaxError() {
     } else {
         (0, _keys2.default)(data).forEach(function (key) {
             var childrenData = data[key];
-            if ((typeof childrenData === 'undefined' ? 'undefined' : (0, _typeof3.default)(childrenData)) === 'object' && childrenData.hasOwnProperty('err_no') && childrenData.err_no != '0') {
+            if (childrenData && (typeof childrenData === 'undefined' ? 'undefined' : (0, _typeof3.default)(childrenData)) === 'object' && childrenData.hasOwnProperty('err_no') && childrenData.err_no != '0') {
                 error.push(getAjaxError(childrenData));
             }
         });

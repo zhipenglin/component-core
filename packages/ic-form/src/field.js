@@ -1,12 +1,29 @@
 import React, {PureComponent} from 'react'
-import FormContext from './Context'
+import withFormData from './withFormData'
 import RULES from './util/RULES'
 import validate from './util/validate'
 import compileErrMsg from './util/compileErrMsg'
 import OrderPromise from './util/OrderPromise'
+import getFieldValue from './util/getFieldValue'
+import compose from 'ic-compose'
+import PropTypes from 'prop-types'
 
-export default (WrappedComponent) => {
-    class Field extends PureComponent {
+export default compose(withFormData,(WrappedComponent) => {
+    return class Field extends PureComponent {
+        static defaultProps={
+            label:'',
+            errMsg:''
+        };
+        static propTypes={
+            name:PropTypes.string.isRequired,
+            label:PropTypes.string,
+            errMsg:PropTypes.string,
+            rule:PropTypes.oneOfType([
+                PropTypes.string,
+                PropTypes.func,
+                PropTypes.instanceOf(RegExp)
+            ])
+        };
         state = {
             errorState: 0,
             errorMsg: ''
@@ -18,7 +35,7 @@ export default (WrappedComponent) => {
             const rules = Object.assign({}, RULES, api.rules);
             if (!this.validatePromise || this.prevValue !== value) {
                 this.validatePromise = validate(value, {
-                    rule, rules, errMsg
+                    rule, rules, errMsg, data: api.data
                 }).then((res) => {
                     return res;
                 });
@@ -28,7 +45,7 @@ export default (WrappedComponent) => {
             return this.orderPromise.add(this.validatePromise);
         }
 
-        validateChange = async () => {
+        runValidate = async () => {
             const {name, api, label} = this.props,
                 value = api.data[name];
             if (typeof value === 'string') {
@@ -46,34 +63,34 @@ export default (WrappedComponent) => {
 
             this.orderPromise.clean();
 
-            await new Promise((resolve)=>{
+            await new Promise((resolve) => {
                 if (res.result) {
                     this.setState({
                         errorState: 1, errorMsg: ''
-                    },()=>resolve());
+                    }, () => resolve());
                 } else {
                     this.setState({
                         errorState: 2, errorMsg: compileErrMsg(res.errMsg, label)
-                    },()=>resolve());
+                    }, () => resolve());
                 }
             });
 
-            api.onValidateChange(name, {
-                result:res.result,errorMsg:this.state.errorMsg
-            });
             return res;
         };
 
-        handlerBlur = (e) => {
-            const {onBlur} = this.props;
-            onBlur && onBlur(e);
-            this.validateChange();
+        validateChange = () => {
+            const {api, name} = this.props;
+            this.runValidate().then((res) => {
+                api.onValidateChange(name, {
+                    result: res.result, errorMsg: this.state.errorMsg
+                });
+            });
         };
 
-        handlerChange = (value) => {
+        handlerChange = (event, value) => {
             const {name, onChange, api} = this.props;
-            onChange && onChange(value);
-            api.onDataChange(name, value);
+            onChange && onChange(event, value);
+            api.onDataChange(name, getFieldValue(event, value));//兼容以前api
         };
 
         componentDidMount() {
@@ -89,14 +106,12 @@ export default (WrappedComponent) => {
         render() {
             const {name, rule, errMsg, api, ...props} = this.props;
             return <WrappedComponent {...props} value={api.data[name]}
+                                     triggerValidate={this.validateChange}
+                                     addEventListener={api.addEventListener}
+                                     removeEventListener={api.removeEventListener}
                                      errorState={this.state.errorState}
                                      errorMsg={this.state.errorMsg}
-                                     onChange={this.handlerChange}
-                                     onBlur={this.handlerBlur}/>
+                                     onChange={this.handlerChange}/>
         }
     }
-
-    return (props) => <FormContext.Consumer>
-        {fieldProps => <Field {...props} api={fieldProps}/>}
-    </FormContext.Consumer>
-};
+});
