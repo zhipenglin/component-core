@@ -1,6 +1,6 @@
 {
   "name": "ic-animate",
-  "version": "2.1.18-alpha.0",
+  "version": "2.1.18",
   "description": "实现react动画",
   "target": "client",
   "main": "dist/index.js",

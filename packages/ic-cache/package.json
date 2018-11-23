@@ -1,6 +1,6 @@
 {
   "name": "ic-cache",
-  "version": "2.1.18-alpha.0",
+  "version": "2.1.18",
   "description": "操作localstore",
   "target": "client",
   "main": "dist/index.js",
