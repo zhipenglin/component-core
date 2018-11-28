@@ -30,14 +30,14 @@ describe('util/RULES.js', () => {
 
     it('NAME',()=>{
         const res=RULES.NAME('');
-        expect(res.result).toBe(false);
-        expect(res.errMsg).toBe('请填写有效姓名');
+        expect(res.result).toBe(true);
+        expect(res.errMsg).toBe('');
 
         const res2=RULES.NAME(123);
         expect(res2.result).toBe(false);
 
         const res3=RULES.NAME(undefined);
-        expect(res3.result).toBe(false);
+        expect(res3.result).toBe(true);
 
         const res4=RULES.NAME('aaa');
         expect(res4.result).toBe(true);
@@ -56,11 +56,11 @@ describe('util/RULES.js', () => {
         expect(res2.result).toBe(true);
 
         const res3=RULES.TEL('');
-        expect(res3.result).toBe(false);
-        expect(res3.errMsg).toBe('请输入有效的手机号');
+        expect(res3.result).toBe(true);
+        expect(res3.errMsg).toBe('');
 
         const res4=RULES.TEL(undefined);
-        expect(res4.result).toBe(false);
+        expect(res4.result).toBe(true);
 
         const res5=RULES.TEL(true);
         expect(res5.result).toBe(false);
@@ -81,7 +81,7 @@ describe('util/RULES.js', () => {
         expect(res3.result).toBe(false);
 
         const res4=RULES.EMAIL(undefined);
-        expect(res4.result).toBe(false);
+        expect(res4.result).toBe(true);
     });
 
     it('LEN',()=>{

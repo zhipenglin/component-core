@@ -102,6 +102,10 @@ var Form = function (_Component) {
             validate: [],
             dataChange: []
         };
+        _this.state = {
+            isPass: false,
+            data: {}
+        };
         var cache = props.cache,
             data = props.data,
             localData = (0, _icCache.getCache)('form-cache-' + cache),
@@ -111,10 +115,7 @@ var Form = function (_Component) {
             (0, _merge2.default)(newData, localData);
         }
         if ((0, _keys2.default)(newData).length > 0) {
-            _this.state = {
-                isPass: false,
-                data: newData
-            };
+            _this.state.data = newData;
         }
         return _this;
     }

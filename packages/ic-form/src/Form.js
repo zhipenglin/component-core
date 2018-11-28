@@ -95,6 +95,10 @@ class Form extends Component {
             validate: [],
             dataChange: []
         };
+        this.state = {
+            isPass: false,
+            data: {}
+        };
         const {cache, data} = props,
             localData = getCache(`form-cache-${cache}`),
             newData = merge({}, data);
@@ -102,10 +106,7 @@ class Form extends Component {
             merge(newData, localData);
         }
         if (Object.keys(newData).length > 0) {
-            this.state = {
-                isPass: false,
-                data: newData
-            };
+            this.state.data=newData;
         }
     }
 
