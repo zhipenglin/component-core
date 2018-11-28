@@ -7,6 +7,12 @@ describe('parse',()=>{
             b:["4","5","6"]
         });
     });
+    it('最简',()=>{
+        expect(parse('a:1,b:2')).toEqual({
+            a:"1",
+            b:"2"
+        });
+    });
     it('格式化',()=>{
         expect(parse('a:1:2:3,b:4:5:6',['value-0','value-1','value-2'])).toEqual({
             a:{

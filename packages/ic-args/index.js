@@ -17,7 +17,7 @@ const parse = (args = '', formater) => {
                 item[key] = value[index];
             });
         } else {
-            item = value;
+            item = value.length===1?value[0]:value;
         }
         output[key] = item;
     });
