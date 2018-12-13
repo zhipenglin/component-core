@@ -1,6 +1,6 @@
 {
   "name": "ic-form",
-  "version": "2.1.23-alpha.3",
+  "version": "2.1.23-alpha.4",
   "description": "用于表单校验的组件",
   "target": "client",
   "main": "dist/index.js",
@@ -10,7 +10,7 @@
   "author": "admin",
   "license": "ISC",
   "dependencies": {
-    "ic-cache": "^2.1.23-alpha.3",
+    "ic-cache": "^2.1.23-alpha.4",
     "ic-compose": "^1.4.12"
   },
   "peerDependencies": {

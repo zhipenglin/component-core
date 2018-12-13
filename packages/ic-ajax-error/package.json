@@ -1,6 +1,6 @@
 {
   "name": "ic-ajax-error",
-  "version": "2.1.23-alpha.3",
+  "version": "2.1.23-alpha.4",
   "description": "处理ajax错误",
   "target": "client",
   "main": "dist/index.js",
