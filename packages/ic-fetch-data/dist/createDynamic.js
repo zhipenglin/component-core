@@ -4,41 +4,17 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _objectWithoutProperties2 = require('babel-runtime/helpers/objectWithoutProperties');
-
-var _objectWithoutProperties3 = _interopRequireDefault(_objectWithoutProperties2);
-
-var _promise = require('babel-runtime/core-js/promise');
-
-var _promise2 = _interopRequireDefault(_promise);
-
 var _extends2 = require('babel-runtime/helpers/extends');
 
 var _extends3 = _interopRequireDefault(_extends2);
 
+var _objectWithoutProperties2 = require('babel-runtime/helpers/objectWithoutProperties');
+
+var _objectWithoutProperties3 = _interopRequireDefault(_objectWithoutProperties2);
+
 var _getPrototypeOf = require('babel-runtime/core-js/object/get-prototype-of');
 
 var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
-
-var _possibleConstructorReturn2 = require('babel-runtime/helpers/possibleConstructorReturn');
-
-var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
-
-var _inherits2 = require('babel-runtime/helpers/inherits');
-
-var _inherits3 = _interopRequireDefault(_inherits2);
-
-var _assign = require('babel-runtime/core-js/object/assign');
-
-var _assign2 = _interopRequireDefault(_assign);
-
-var _typeof2 = require('babel-runtime/helpers/typeof');
-
-var _typeof3 = _interopRequireDefault(_typeof2);
-
-var _for = require('babel-runtime/core-js/symbol/for');
-
-var _for2 = _interopRequireDefault(_for);
 
 var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
 
@@ -48,90 +24,37 @@ var _createClass2 = require('babel-runtime/helpers/createClass');
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
+var _possibleConstructorReturn2 = require('babel-runtime/helpers/possibleConstructorReturn');
+
+var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+var _inherits2 = require('babel-runtime/helpers/inherits');
+
+var _inherits3 = _interopRequireDefault(_inherits2);
+
 var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
-
-var _axios = require('axios');
-
-var _axios2 = _interopRequireDefault(_axios);
 
 var _isEqual = require('lodash/isEqual');
 
 var _isEqual2 = _interopRequireDefault(_isEqual);
 
-var _objectHash = require('object-hash');
+var _Cache = require('./Cache');
 
-var _objectHash2 = _interopRequireDefault(_objectHash);
+var _Cache2 = _interopRequireDefault(_Cache);
+
+var _createGetData = require('./createGetData');
+
+var _createGetData2 = _interopRequireDefault(_createGetData);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var Cache = function () {
-    (0, _createClass3.default)(Cache, null, [{
-        key: 'getId',
-        value: function getId(_ref) {
-            var url = _ref.url,
-                params = _ref.params,
-                data = _ref.data,
-                method = _ref.method,
-                baseURL = _ref.baseURL,
-                headers = _ref.headers;
-
-            return (0, _for2.default)((0, _objectHash2.default)({ url: url, params: params, data: data, method: method, baseURL: baseURL, headers: headers }));
-        }
-    }]);
-
-    function Cache() {
-        (0, _classCallCheck3.default)(this, Cache);
-
-        this.__cache = {};
-    }
-
-    (0, _createClass3.default)(Cache, [{
-        key: 'getCache',
-        value: function getCache(id) {
-            if ((typeof id === 'undefined' ? 'undefined' : (0, _typeof3.default)(id)) !== 'symbol') {
-                id = this.constructor.getId(id);
-            }
-            return this.__cache[id];
-        }
-    }, {
-        key: 'append',
-        value: function append(key, value) {
-            this.__cache[this.constructor.getId(key)] = value;
-            return this;
-        }
-    }, {
-        key: 'clean',
-        value: function clean() {
-            this.__cache = {};
-            return this;
-        }
-    }, {
-        key: 'allCache',
-        get: function get() {
-            return (0, _assign2.default)({}, this.__cache);
-        }
-    }]);
-    return Cache;
-}();
-
-var globCache = new Cache();
 
 var createDynamic = function createDynamic(currentCache, ajax) {
     return function (WrappedComponent) {
         var _class, _temp;
 
-        var ajaxWithCache = function ajaxWithCache(props) {
-            var cache = currentCache.getCache(props);
-            if (cache) {
-                return cache;
-            } else {
-                var promise = ajax(props);
-                currentCache.append(props, promise);
-                return promise;
-            }
-        };
+        var getAjaxData = (0, _createGetData2.default)(currentCache, ajax);
         return _temp = _class = function (_PureComponent) {
             (0, _inherits3.default)(Dynamic, _PureComponent);
 
@@ -155,44 +78,31 @@ var createDynamic = function createDynamic(currentCache, ajax) {
                         url = _this$props.url,
                         params = _this$props.params,
                         data = _this$props.data,
-                        onError = _this$props.onError,
-                        onStart = _this$props.onStart,
-                        onSuccess = _this$props.onSuccess,
+                        _onError = _this$props.onError,
+                        _onStart = _this$props.onStart,
+                        _onSuccess = _this$props.onSuccess,
                         onComplete = _this$props.onComplete,
                         options = _this$props.options,
-                        cache = _this$props.cache;
+                        cache = _this$props.cache,
+                        getResults = _this$props.getResults;
 
-                    _this.setState({ isError: false, isLoading: true }, function () {
-                        return onStart && onStart();
-                    });
-                    _this.cancelHandler();
-                    var cancelToken = new _axios2.default.CancelToken(function (cancelHandler) {
-                        _this.cancelHandler = cancelHandler;
-                    });
-                    (cache ? ajaxWithCache : ajax)((0, _extends3.default)({
-                        url: url, params: params, data: data, cancelToken: cancelToken }, options)).then(function (_ref2) {
-                        var data = _ref2.data;
-                        var getResults = _this.props.getResults;
-
-                        var _getResults = getResults(data),
-                            err_no = _getResults.err_no,
-                            results = _getResults.results;
-
-                        if (err_no == '0') {
-                            _this.setState({
-                                isLoading: false, results: results
-                            });
-                            onSuccess && onSuccess(data);
-                        } else {
-                            return _promise2.default.reject(new Error(data));
-                        }
-                    }).catch(function (e) {
-                        if (!_axios2.default.isCancel(e)) {
-                            onError && onError(e);
+                    return getAjaxData({
+                        url: url, params: params, data: data,
+                        onError: function onError(e) {
+                            _onError && _onError(e);
                             _this.setState({ isError: true });
-                        }
-                    }).then(function () {
-                        onComplete && onComplete();
+                        },
+                        onStart: function onStart() {
+                            _this.setState({ isError: false, isLoading: true }, function () {
+                                return _onStart && _onStart();
+                            });
+                        },
+                        onSuccess: function onSuccess(data) {
+                            _this.setState({
+                                isLoading: false, results: getResults(data).results
+                            });
+                            _onSuccess && _onSuccess(data);
+                        }, onComplete: onComplete, options: options, cache: cache, getResults: getResults
                     });
                 };
 
@@ -207,9 +117,9 @@ var createDynamic = function createDynamic(currentCache, ajax) {
                 }
             }, {
                 key: 'componentDidUpdate',
-                value: function componentDidUpdate(_ref3) {
-                    var params = _ref3.params,
-                        data = _ref3.data;
+                value: function componentDidUpdate(_ref) {
+                    var params = _ref.params,
+                        data = _ref.data;
 
                     if (!((0, _isEqual2.default)(params, this.props.params) && (0, _isEqual2.default)(data, this.props.data))) {
                         this.getData();
@@ -255,14 +165,14 @@ var createDynamic = function createDynamic(currentCache, ajax) {
 };
 
 exports.default = function (ajax) {
-    var dynamic = createDynamic(globCache, ajax);
+    var dynamic = createDynamic(_Cache.globCache, ajax);
     dynamic.createCacheDynamic = function () {
-        var cache = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : new Cache();
+        var cache = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : new _Cache2.default();
         return createDynamic(cache);
     };
-    dynamic.Cache = Cache;
+    dynamic.Cache = _Cache2.default;
     dynamic.cleanCache = function () {
-        globCache.clean();
+        _Cache.globCache.clean();
     };
     return dynamic;
 };

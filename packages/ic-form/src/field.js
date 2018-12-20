@@ -8,17 +8,17 @@ import getFieldValue from './util/getFieldValue'
 import compose from 'ic-compose'
 import PropTypes from 'prop-types'
 
-export default compose(withFormData,(WrappedComponent) => {
+export default compose(withFormData, (WrappedComponent) => {
     return class Field extends PureComponent {
-        static defaultProps={
-            label:'',
-            errMsg:''
+        static defaultProps = {
+            label: '',
+            errMsg: ''
         };
-        static propTypes={
-            name:PropTypes.string.isRequired,
-            label:PropTypes.string,
-            errMsg:PropTypes.string,
-            rule:PropTypes.oneOfType([
+        static propTypes = {
+            name: PropTypes.string.isRequired,
+            label: PropTypes.string,
+            errMsg: PropTypes.string,
+            rule: PropTypes.oneOfType([
                 PropTypes.string,
                 PropTypes.func,
                 PropTypes.instanceOf(RegExp)
@@ -48,8 +48,9 @@ export default compose(withFormData,(WrappedComponent) => {
         runValidate = async () => {
             const {name, api, label} = this.props,
                 value = api.data[name];
+            let newValue = value;
             if (typeof value === 'string') {
-                const newValue = value.trim();
+                newValue = newValue.trim();
                 if (newValue !== value) {
                     api.onDataChange(name, newValue);
                 }
@@ -59,9 +60,11 @@ export default compose(withFormData,(WrappedComponent) => {
                 errorState: 3, errorMsg: ''
             });
 
-            const res = await this.validate(value);
+            const res = await this.validate(newValue);
 
             this.orderPromise.clean();
+
+            let errorMsg = '';
 
             await new Promise((resolve) => {
                 if (res.result) {
@@ -69,13 +72,14 @@ export default compose(withFormData,(WrappedComponent) => {
                         errorState: 1, errorMsg: ''
                     }, () => resolve());
                 } else {
+                    errorMsg = compileErrMsg(res.errMsg, label);
                     this.setState({
-                        errorState: 2, errorMsg: compileErrMsg(res.errMsg, label)
+                        errorState: 2, errorMsg: errorMsg
                     }, () => resolve());
                 }
             });
 
-            return res;
+            return {result: res.result, errMsg: errorMsg};
         };
 
         validateChange = () => {

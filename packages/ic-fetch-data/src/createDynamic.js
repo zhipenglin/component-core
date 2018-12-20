@@ -1,52 +1,10 @@
 import React, {PureComponent} from 'react'
-import axios from 'axios'
 import isEqual from 'lodash/isEqual'
-import hash from 'object-hash'
-
-class Cache {
-    static getId({url, params, data, method, baseURL, headers}) {
-        return Symbol.for(hash({url, params, data, method, baseURL, headers}));
-    }
-
-    constructor() {
-        this.__cache = {};
-    }
-
-    get allCache() {
-        return Object.assign({}, this.__cache);
-    }
-
-    getCache(id) {
-        if (typeof id !== 'symbol') {
-            id = this.constructor.getId(id);
-        }
-        return this.__cache[id];
-    }
-
-    append(key, value) {
-        this.__cache[this.constructor.getId(key)] = value;
-        return this;
-    }
-
-    clean() {
-        this.__cache = {};
-        return this;
-    }
-}
-
-let globCache = new Cache();
+import Cache, {globCache} from './Cache'
+import createGetData from './createGetData'
 
 const createDynamic = (currentCache, ajax) => (WrappedComponent) => {
-    let ajaxWithCache = (props) => {
-        const cache = currentCache.getCache(props);
-        if (cache) {
-            return cache;
-        } else {
-            const promise = ajax(props);
-            currentCache.append(props, promise);
-            return promise;
-        }
-    };
+    const getAjaxData = createGetData(currentCache, ajax);
     return class Dynamic extends PureComponent {
         static defaultProps = {
             loading: null,
@@ -75,32 +33,22 @@ const createDynamic = (currentCache, ajax) => (WrappedComponent) => {
             this.setState({results});
         };
         getData = () => {
-            const {url, params, data, onError, onStart, onSuccess, onComplete, options, cache} = this.props;
-            this.setState({isError: false, isLoading: true}, () => onStart && onStart());
-            this.cancelHandler();
-            let cancelToken = new axios.CancelToken((cancelHandler) => {
-                this.cancelHandler = cancelHandler
-            });
-            (cache ? ajaxWithCache : ajax)({
-                url, params, data, cancelToken, ...options
-            }).then(({data}) => {
-                const {getResults} = this.props;
-                const {err_no, results} = getResults(data);
-                if (err_no == '0') {
-                    this.setState({
-                        isLoading: false, results: results
-                    });
-                    onSuccess && onSuccess(data);
-                } else {
-                    return Promise.reject(new Error(data));
-                }
-            }).catch((e) => {
-                if (!axios.isCancel(e)) {
+            const {url, params, data, onError, onStart, onSuccess, onComplete, options, cache, getResults} = this.props;
+            return getAjaxData({
+                url, params, data,
+                onError: (e) => {
                     onError && onError(e);
                     this.setState({isError: true});
-                }
-            }).then(() => {
-                onComplete && onComplete();
+                },
+                onStart: () => {
+                    this.setState({isError: false, isLoading: true}, () => onStart && onStart());
+                },
+                onSuccess: (data) => {
+                    this.setState({
+                        isLoading: false, results: getResults(data).results
+                    });
+                    onSuccess && onSuccess(data);
+                }, onComplete, options, cache, getResults
             });
         };
 

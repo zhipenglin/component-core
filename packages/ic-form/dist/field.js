@@ -108,17 +108,17 @@ exports.default = (0, _icCompose2.default)(_withFormData2.default, function (Wra
                 errorState: 0,
                 errorMsg: ''
             }, _this.orderPromise = new _OrderPromise2.default(), _this.runValidate = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee() {
-                var _this$props, name, api, label, value, newValue, res;
+                var _this$props, name, api, label, value, newValue, res, errorMsg;
 
                 return _regenerator2.default.wrap(function _callee$(_context) {
                     while (1) {
                         switch (_context.prev = _context.next) {
                             case 0:
                                 _this$props = _this.props, name = _this$props.name, api = _this$props.api, label = _this$props.label, value = api.data[name];
+                                newValue = value;
 
                                 if (typeof value === 'string') {
-                                    newValue = value.trim();
-
+                                    newValue = newValue.trim();
                                     if (newValue !== value) {
                                         api.onDataChange(name, newValue);
                                     }
@@ -128,16 +128,17 @@ exports.default = (0, _icCompose2.default)(_withFormData2.default, function (Wra
                                     errorState: 3, errorMsg: ''
                                 });
 
-                                _context.next = 5;
-                                return _this.validate(value);
+                                _context.next = 6;
+                                return _this.validate(newValue);
 
-                            case 5:
+                            case 6:
                                 res = _context.sent;
 
 
                                 _this.orderPromise.clean();
 
-                                _context.next = 9;
+                                errorMsg = '';
+                                _context.next = 11;
                                 return new _promise2.default(function (resolve) {
                                     if (res.result) {
                                         _this.setState({
@@ -146,18 +147,19 @@ exports.default = (0, _icCompose2.default)(_withFormData2.default, function (Wra
                                             return resolve();
                                         });
                                     } else {
+                                        errorMsg = (0, _compileErrMsg2.default)(res.errMsg, label);
                                         _this.setState({
-                                            errorState: 2, errorMsg: (0, _compileErrMsg2.default)(res.errMsg, label)
+                                            errorState: 2, errorMsg: errorMsg
                                         }, function () {
                                             return resolve();
                                         });
                                     }
                                 });
 
-                            case 9:
-                                return _context.abrupt('return', res);
+                            case 11:
+                                return _context.abrupt('return', { result: res.result, errMsg: errorMsg });
 
-                            case 10:
+                            case 12:
                             case 'end':
                                 return _context.stop();
                         }
