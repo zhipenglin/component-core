@@ -1,7 +1,7 @@
 {
-  "name": "ic-ajax-error",
+  "name": "ic-wechat-share",
   "version": "2.1.23-alpha.12",
-  "description": "处理ajax错误",
+  "description": "微信分享sdk",
   "target": "client",
   "main": "dist/index.js",
   "scripts": {
