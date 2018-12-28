@@ -2,6 +2,7 @@ import React, {PureComponent} from 'react'
 import isEqual from 'lodash/isEqual'
 import Cache, {globCache} from './Cache'
 import createGetData from './createGetData'
+import omit from "lodash/omit";
 
 const createDynamic = (currentCache, ajax) => (WrappedComponent) => {
     const getAjaxData = createGetData(currentCache, ajax);
@@ -18,12 +19,6 @@ const createDynamic = (currentCache, ajax) => (WrappedComponent) => {
             }
         };
 
-        constructor(props) {
-            super(props);
-            this.cancelHandler = () => {
-            };
-        }
-
         state = {
             results: null,
             isError: false,
@@ -36,6 +31,9 @@ const createDynamic = (currentCache, ajax) => (WrappedComponent) => {
             const {url, params, data, onError, onStart, onSuccess, onComplete, options, cache, getResults} = this.props;
             return getAjaxData({
                 url, params, data,
+                cancelHandler: (cancelHandler) => {
+                    this.cancelHandler = cancelHandler;
+                },
                 onError: (e) => {
                     onError && onError(e);
                     this.setState({isError: true});
@@ -63,18 +61,20 @@ const createDynamic = (currentCache, ajax) => (WrappedComponent) => {
         }
 
         componentWillUnmount() {
-            this.cancelHandler();
+            this.cancelHandler && this.cancelHandler();
         }
 
         render() {
-            const {loading, error, ...args} = this.props;
+            const {loading, error} = this.props;
             if (this.state.isError) {
                 return error;
             }
             if (this.state.isLoading) {
                 return loading;
             } else {
-                return <WrappedComponent {...args} results={this.state.results} changeResults={this.changeResults}
+                return <WrappedComponent {...omit(this.props, ['loading', 'error', 'getResults', 'onError', 'onStart', 'onSuccess', 'cancelHandler', 'onComplete'])}
+                                         results={this.state.results}
+                                         changeResults={this.changeResults}
                                          getData={this.getData}/>
             }
         }
@@ -83,10 +83,8 @@ const createDynamic = (currentCache, ajax) => (WrappedComponent) => {
 
 export default (ajax) => {
     const dynamic = createDynamic(globCache, ajax);
-    dynamic.createCacheDynamic = (cache = new Cache()) => createDynamic(cache);
+    dynamic.createCacheDynamic = (cache = new Cache()) => createDynamic(cache, ajax);
     dynamic.Cache = Cache;
-    dynamic.cleanCache = () => {
-        globCache.clean();
-    };
+    dynamic.cleanCache = (...args) => globCache.clean(...args);
     return dynamic;
 };

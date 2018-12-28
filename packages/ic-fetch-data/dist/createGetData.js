@@ -1,35 +1,40 @@
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _promise = require("babel-runtime/core-js/promise");
+var _promise = require('babel-runtime/core-js/promise');
 
 var _promise2 = _interopRequireDefault(_promise);
 
-var _extends2 = require("babel-runtime/helpers/extends");
+var _extends2 = require('babel-runtime/helpers/extends');
 
 var _extends3 = _interopRequireDefault(_extends2);
 
-var _index = require("axios/index");
+var _index = require('axios/index');
 
 var _index2 = _interopRequireDefault(_index);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = function (currentCache, ajax) {
-    var ajaxWithCache = function ajaxWithCache(props) {
-        var cache = currentCache.getCache(props);
-        if (cache) {
-            return cache;
-        } else {
-            var promise = ajax(props);
-            currentCache.append(props, promise);
-            return promise;
-        }
-    },
-        cancelHandler = function cancelHandler() {};
+    var ajaxWithCache = function ajaxWithCache(cacheKey) {
+        return function (props) {
+            var namespace = 'global';
+            if (typeof cacheKey === 'string' && cacheKey.length > 0) {
+                namespace = cacheKey;
+            }
+            var cache = currentCache.getCache(props, namespace);
+            if (cache) {
+                return cache;
+            } else {
+                var promise = ajax(props);
+                currentCache.append(props, promise, namespace);
+                return promise;
+            }
+        };
+    };
 
     return function (_ref) {
         var url = _ref.url,
@@ -37,17 +42,16 @@ exports.default = function (currentCache, ajax) {
             data = _ref.data,
             onError = _ref.onError,
             onStart = _ref.onStart,
+            cancelHandler = _ref.cancelHandler,
             onSuccess = _ref.onSuccess,
             onComplete = _ref.onComplete,
             options = _ref.options,
             cache = _ref.cache,
             getResults = _ref.getResults;
 
-        var cancelToken = new _index2.default.CancelToken(function (handler) {
-            cancelHandler = handler;
-        });
+        var cancelToken = new _index2.default.CancelToken(cancelHandler);
         onStart && onStart();
-        return (cache ? ajaxWithCache : ajax)((0, _extends3.default)({
+        return (cache ? ajaxWithCache(cache) : ajax)((0, _extends3.default)({
             url: url, params: params, data: data, cancelToken: cancelToken }, options)).then(function (_ref2) {
             var data = _ref2.data;
 

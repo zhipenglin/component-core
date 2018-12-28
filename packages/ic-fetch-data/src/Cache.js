@@ -1,6 +1,7 @@
 import hash from 'object-hash'
+import get from 'lodash/get'
 
-export default class Cache{
+export default class Cache {
     static getId({url, params, data, method, baseURL, headers}) {
         return Symbol.for(hash({url, params, data, method, baseURL, headers}));
     }
@@ -13,20 +14,22 @@ export default class Cache{
         return Object.assign({}, this.__cache);
     }
 
-    getCache(id) {
+    getCache(id, namespace = 'global') {
         if (typeof id !== 'symbol') {
             id = this.constructor.getId(id);
         }
-        return this.__cache[id];
+        return get(this.__cache, `[${namespace}]`, {})[id];
     }
 
-    append(key, value) {
-        this.__cache[this.constructor.getId(key)] = value;
+    append(key, value, namespace = 'global') {
+        this.__cache[namespace] = Object.assign({}, this.__cache[namespace], {
+            [this.constructor.getId(key)]: value
+        });
         return this;
     }
 
-    clean() {
-        this.__cache = {};
+    clean(namespace = 'global') {
+        this.__cache[namespace] = {};
         return this;
     }
 }

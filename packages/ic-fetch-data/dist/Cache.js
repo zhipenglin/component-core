@@ -5,6 +5,10 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.globCache = undefined;
 
+var _defineProperty2 = require('babel-runtime/helpers/defineProperty');
+
+var _defineProperty3 = _interopRequireDefault(_defineProperty2);
+
 var _assign = require('babel-runtime/core-js/object/assign');
 
 var _assign2 = _interopRequireDefault(_assign);
@@ -28,6 +32,10 @@ var _createClass3 = _interopRequireDefault(_createClass2);
 var _objectHash = require('object-hash');
 
 var _objectHash2 = _interopRequireDefault(_objectHash);
+
+var _get = require('lodash/get');
+
+var _get2 = _interopRequireDefault(_get);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -55,21 +63,27 @@ var Cache = function () {
     (0, _createClass3.default)(Cache, [{
         key: 'getCache',
         value: function getCache(id) {
+            var namespace = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'global';
+
             if ((typeof id === 'undefined' ? 'undefined' : (0, _typeof3.default)(id)) !== 'symbol') {
                 id = this.constructor.getId(id);
             }
-            return this.__cache[id];
+            return (0, _get2.default)(this.__cache, '[' + namespace + ']', {})[id];
         }
     }, {
         key: 'append',
         value: function append(key, value) {
-            this.__cache[this.constructor.getId(key)] = value;
+            var namespace = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'global';
+
+            this.__cache[namespace] = (0, _assign2.default)({}, this.__cache[namespace], (0, _defineProperty3.default)({}, this.constructor.getId(key), value));
             return this;
         }
     }, {
         key: 'clean',
         value: function clean() {
-            this.__cache = {};
+            var namespace = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'global';
+
+            this.__cache[namespace] = {};
             return this;
         }
     }, {

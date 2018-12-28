@@ -41,6 +41,7 @@ const createListLoader = (currentCache, ajax) => (WrappedComponent) => {
                 isLoading: false,
                 isComplete: false
             }
+            this.__isInit = false;
         }
 
         getData = (refresh) => {
@@ -75,6 +76,9 @@ const createListLoader = (currentCache, ajax) => (WrappedComponent) => {
                     }, resolve)
                 }).then(() => getAjaxData({
                     url, params: mixinProps(params), data: mixinProps(data),
+                    cancelHandler: (cancelHandler) => {
+                        this.cancelHandler = cancelHandler;
+                    },
                     onError: (e) => {
                         onError && onError(e);
                         this.setState({isLoading: false});
@@ -90,7 +94,7 @@ const createListLoader = (currentCache, ajax) => (WrappedComponent) => {
                             currentPage: this.state.currentPage + 1,
                             results,
                             list: newList,
-                            isComplete: countAll && countAll <= newList.length
+                            isComplete: !Number.isNaN(Number(countAll)) ? countAll <= newList.length : this.state.isComplete
                         });
                         onSuccess && onSuccess(data);
                     }, onComplete, options, cache, getResults
@@ -98,25 +102,38 @@ const createListLoader = (currentCache, ajax) => (WrappedComponent) => {
             });
         };
 
+        refresh = () => {
+            this.getData(true);
+        };
+
         componentDidMount() {
+            this.__isInit = true;
             this.getData();
         }
 
         componentDidUpdate({params, data}) {
             if (!(isEqual(params, this.props.params) && isEqual(data, this.props.data))) {
-                this.getData(true);
+                this.refresh();
             }
+        }
+
+        componentWillUnmount() {
+            this.cancelHandler && this.cancelHandler();
         }
 
         render() {
             const {loading, complete, empty} = this.props;
+            if (this.__isInit === false && this.state.list.length === 0) {
+                return null;
+            }
             return (
                 <Fragment>
-                    <WrappedComponent {...omit(this.props, ['loading', 'complete', 'cache', 'pageKey', 'pageSizeKey', 'startIndex', 'defaultList', 'pageSize', 'getResults', 'url', 'params', 'data', 'onError', 'onStart', 'onSuccess', 'onComplete', 'options'])}
+                    <WrappedComponent {...omit(this.props, ['loading', 'complete', 'empty', 'pageKey', 'pageSizeKey', 'startIndex', 'defaultList', 'pageSize', 'getResults', 'onError', 'onStart', 'onSuccess', 'cancelHandler', 'onComplete'])}
                                       list={this.state.list} isLoading={this.state.isLoading}
-                                      results={this.state.results} load={this.getData}/>
+                                      isComplete={this.state.isComplete}
+                                      results={this.state.results} load={this.getData} refresh={this.refresh}/>
                     {this.state.isLoading ? loading : null}
-                    {this.state.isComplete ? this.state.list.length > 0 ? complete : empty : null}
+                    {this.state.isComplete ? (this.state.list.length > 0 ? complete : empty) : null}
                 </Fragment>
             );
         }
@@ -125,10 +142,8 @@ const createListLoader = (currentCache, ajax) => (WrappedComponent) => {
 
 export default (ajax) => {
     const listLoader = createListLoader(globCache, ajax);
-    listLoader.createCacheDynamic = (cache = new Cache()) => createListLoader(cache);
+    listLoader.createCacheDynamic = (cache = new Cache()) => createListLoader(cache, ajax);
     listLoader.Cache = Cache;
-    listLoader.cleanCache = () => {
-        globCache.clean();
-    };
+    listLoader.cleanCache = (...args) => globCache.clean(...args);
     return listLoader;
 }

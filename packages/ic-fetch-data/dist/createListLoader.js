@@ -8,6 +8,10 @@ var _extends2 = require('babel-runtime/helpers/extends');
 
 var _extends3 = _interopRequireDefault(_extends2);
 
+var _isNan = require('babel-runtime/core-js/number/is-nan');
+
+var _isNan2 = _interopRequireDefault(_isNan);
+
 var _toConsumableArray2 = require('babel-runtime/helpers/toConsumableArray');
 
 var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
@@ -130,6 +134,9 @@ var createListLoader = function createListLoader(currentCache, ajax) {
                         }).then(function () {
                             return getAjaxData({
                                 url: url, params: mixinProps(params), data: mixinProps(data),
+                                cancelHandler: function cancelHandler(_cancelHandler) {
+                                    _this.cancelHandler = _cancelHandler;
+                                },
                                 onError: function onError(e) {
                                     _onError && _onError(e);
                                     _this.setState({ isLoading: false });
@@ -151,7 +158,7 @@ var createListLoader = function createListLoader(currentCache, ajax) {
                                         currentPage: _this.state.currentPage + 1,
                                         results: results,
                                         list: newList,
-                                        isComplete: countAll && countAll <= newList.length
+                                        isComplete: !(0, _isNan2.default)(Number(countAll)) ? countAll <= newList.length : _this.state.isComplete
                                     });
                                     _onSuccess && _onSuccess(data);
                                 }, onComplete: onComplete, options: options, cache: cache, getResults: getResults
@@ -168,12 +175,14 @@ var createListLoader = function createListLoader(currentCache, ajax) {
                     isLoading: false,
                     isComplete: false
                 };
+                _this.__isInit = false;
                 return _this;
             }
 
             (0, _createClass3.default)(ListLoader, [{
                 key: 'componentDidMount',
                 value: function componentDidMount() {
+                    this.__isInit = true;
                     this.getData();
                 }
             }, {
@@ -187,19 +196,30 @@ var createListLoader = function createListLoader(currentCache, ajax) {
                     }
                 }
             }, {
+                key: 'componentWillUnmount',
+                value: function componentWillUnmount() {
+                    this.cancelHandler && this.cancelHandler();
+                }
+            }, {
                 key: 'render',
                 value: function render() {
                     var _props = this.props,
                         loading = _props.loading,
-                        complete = _props.complete;
+                        complete = _props.complete,
+                        empty = _props.empty;
 
+                    if (this.__isInit === false && this.state.list.length === 0) {
+                        return null;
+                    }
                     return _react2.default.createElement(
                         _react.Fragment,
                         null,
-                        _react2.default.createElement(WrappedComponent, (0, _extends3.default)({}, (0, _omit2.default)(this.props, ['loading', 'complete', 'cache', 'pageKey', 'pageSizeKey', 'startIndex', 'defaultList', 'pageSize', 'getResults', 'url', 'params', 'data', 'onError', 'onStart', 'onSuccess', 'onComplete', 'options']), {
-                            list: this.state.list, results: this.state.results, load: this.getData })),
+                        _react2.default.createElement(WrappedComponent, (0, _extends3.default)({}, (0, _omit2.default)(this.props, ['loading', 'complete', 'empty', 'pageKey', 'pageSizeKey', 'startIndex', 'defaultList', 'pageSize', 'getResults', 'onError', 'onStart', 'onSuccess', 'cancelHandler', 'onComplete']), {
+                            list: this.state.list, isLoading: this.state.isLoading,
+                            isComplete: this.state.isComplete,
+                            results: this.state.results, load: this.getData })),
                         this.state.isLoading ? loading : null,
-                        this.state.list.length > 0 && this.state.isComplete ? complete : null
+                        this.state.isComplete ? this.state.list.length > 0 ? complete : empty : null
                     );
                 }
             }]);
@@ -207,6 +227,7 @@ var createListLoader = function createListLoader(currentCache, ajax) {
         }(_react.PureComponent), _class.defaultProps = {
             loading: null,
             complete: null,
+            empty: null,
             cache: false,
             pageKey: 'page',
             pageSizeKey: 'pageSize',
@@ -232,11 +253,11 @@ exports.default = function (ajax) {
     var listLoader = createListLoader(_Cache.globCache, ajax);
     listLoader.createCacheDynamic = function () {
         var cache = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : new _Cache2.default();
-        return createListLoader(cache);
+        return createListLoader(cache, ajax);
     };
     listLoader.Cache = _Cache2.default;
     listLoader.cleanCache = function () {
-        _Cache.globCache.clean();
+        return _Cache.globCache.clean.apply(_Cache.globCache, arguments);
     };
     return listLoader;
 };
