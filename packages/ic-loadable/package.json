@@ -1,7 +1,7 @@
 {
-  "name": "ic-cache",
+  "name": "ic-loadable",
   "version": "2.1.23-alpha.28",
-  "description": "操作localstore",
+  "description": "用于react动态组件加载",
   "target": "client",
   "main": "dist/index.js",
   "scripts": {
