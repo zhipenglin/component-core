@@ -1,6 +1,6 @@
 {
   "name": "ic-wechat-share",
-  "version": "2.2.3",
+  "version": "2.2.4",
   "description": "微信分享sdk",
   "target": "client",
   "main": "dist/index.js",

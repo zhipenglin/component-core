@@ -1,6 +1,6 @@
 {
   "name": "ic-args",
-  "version": "2.2.3",
+  "version": "2.2.4",
   "description": "一种用字符串表示对象的格式，通常用于环境变量的配置",
   "target": "node",
   "main": "index.js",
