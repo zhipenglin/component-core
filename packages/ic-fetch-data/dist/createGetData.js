@@ -51,7 +51,7 @@ exports.default = function (currentCache, ajax) {
 
         var cancelToken = new _index2.default.CancelToken(cancelHandler);
         onStart && onStart();
-        return (cache ? ajaxWithCache(cache) : ajax)((0, _extends3.default)({
+        var getAjaxData = (cache ? ajaxWithCache(cache) : ajax)((0, _extends3.default)({
             url: url, params: params, data: data, cancelToken: cancelToken }, options)).then(function (_ref2) {
             var data = _ref2.data;
 
@@ -70,5 +70,14 @@ exports.default = function (currentCache, ajax) {
         }).then(function () {
             onComplete && onComplete();
         });
+
+        getAjaxData.clean = function () {
+            if (typeof cache === 'string' && cache.length > 0) {
+                currentCache.clean(cache);
+            } else {
+                console.warn(cache ? '当前的缓存保存在全局命名空间下，请使用全局clean方法' : "cache没有被开启");
+            }
+        };
+        return getAjaxData;
     };
 };

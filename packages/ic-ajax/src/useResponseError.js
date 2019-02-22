@@ -1,4 +1,4 @@
-import ajaxError from "ic-ajax-error";
+import ajaxError from "@core/ic-ajax-error";
 
 export default response =>{
     if (response.config.ignoreError) {

@@ -1,0 +1,15 @@
+{
+  "name": "@core/ic-beacon",
+  "version": "2.5.0",
+  "description": "代码统计代码",
+  "target": "client",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "linzp",
+  "license": "ISC",
+  "peerDependencies": {
+    "react": ">=16.2.0"
+  }
+}

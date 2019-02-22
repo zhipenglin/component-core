@@ -148,6 +148,7 @@ var createDynamic = function createDynamic(currentCache, ajax) {
                         return _react2.default.createElement(WrappedComponent, (0, _extends3.default)({}, (0, _omit2.default)(this.props, ['loading', 'error', 'getResults', 'onError', 'onStart', 'onSuccess', 'cancelHandler', 'onComplete']), {
                             results: this.state.results,
                             changeResults: this.changeResults,
+                            clean: getAjaxData.clean,
                             getData: this.getData }));
                     }
                 }

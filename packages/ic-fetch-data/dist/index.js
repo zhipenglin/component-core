@@ -48,7 +48,7 @@ var createFetchData = function createFetchData(ajax) {
         return function (WrappedComponent) {
             var FetchData = createDynamic(ajax)(WrappedComponent);
             return function (props) {
-                return _react2.default.createElement(FetchData, (0, _extends3.default)({}, props, { url: url, params: params, options: options }));
+                return _react2.default.createElement(FetchData, (0, _extends3.default)({}, props, { url: url, params: params, data: data, options: options }));
             };
         };
     };
@@ -66,7 +66,7 @@ var listLoader = function listLoader(ajax) {
         return function (WrappedComponent) {
             var ListLoader = createListLoader(ajax)(WrappedComponent);
             return function (props) {
-                return _react2.default.createElement(ListLoader, (0, _extends3.default)({}, props, { url: url, params: params, options: options }));
+                return _react2.default.createElement(ListLoader, (0, _extends3.default)({}, props, { url: url, data: data, params: params, options: options }));
             };
         };
     };

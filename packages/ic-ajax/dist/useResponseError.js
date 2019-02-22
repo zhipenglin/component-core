@@ -4,7 +4,7 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _icAjaxError = require("ic-ajax-error");
+var _icAjaxError = require("@core/ic-ajax-error");
 
 var _icAjaxError2 = _interopRequireDefault(_icAjaxError);
 

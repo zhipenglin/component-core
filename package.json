@@ -1,4 +1,5 @@
 {
+  "scope":"@core",
   "scripts": {
     "test": "jest --coverage --collectCoverageFrom=**/src/**/*"
   },

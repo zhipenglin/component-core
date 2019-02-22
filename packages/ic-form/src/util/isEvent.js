@@ -1,3 +1,3 @@
-export default (event)=>{
-    return event instanceof window.Event||event.nativeEvent instanceof window.Event;
+export default (event) => {
+    return event instanceof window.Event || event.nativeEvent instanceof window.Event || typeof event.preventDefault === 'function';
 };

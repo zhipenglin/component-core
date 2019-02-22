@@ -19,7 +19,7 @@ export default (currentCache, ajax) => {
     return ({url, params, data, onError, onStart, cancelHandler, onSuccess, onComplete, options, cache, getResults}) => {
         let cancelToken = new axios.CancelToken(cancelHandler);
         onStart && onStart();
-        return (cache ? ajaxWithCache(cache) : ajax)({
+        const getAjaxData=(cache ? ajaxWithCache(cache) : ajax)({
             url, params, data, cancelToken, ...options
         }).then(({data}) => {
             const {err_no} = getResults(data);
@@ -35,5 +35,14 @@ export default (currentCache, ajax) => {
         }).then(() => {
             onComplete && onComplete();
         });
+
+        getAjaxData.clean=()=>{
+            if (typeof cache === 'string' && cache.length > 0) {
+                currentCache.clean(cache);
+            } else {
+                console.warn(cache ? '当前的缓存保存在全局命名空间下，请使用全局clean方法' : "cache没有被开启");
+            }
+        };
+        return getAjaxData;
     };
 };

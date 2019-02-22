@@ -1,12 +1,11 @@
 {
-  "name": "@core/ic-cache",
+  "name": "@core/ic-compose",
   "version": "2.5.0",
-  "description": "操作localstore",
-  "target": "client",
+  "description": "实现方法的调用串联",
   "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "admin",
+  "author": "linzp",
   "license": "ISC"
 }

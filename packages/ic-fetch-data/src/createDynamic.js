@@ -75,6 +75,7 @@ const createDynamic = (currentCache, ajax) => (WrappedComponent) => {
                 return <WrappedComponent {...omit(this.props, ['loading', 'error', 'getResults', 'onError', 'onStart', 'onSuccess', 'cancelHandler', 'onComplete'])}
                                          results={this.state.results}
                                          changeResults={this.changeResults}
+                                         clean={getAjaxData.clean}
                                          getData={this.getData}/>
             }
         }
