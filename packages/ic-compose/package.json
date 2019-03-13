@@ -1,6 +1,6 @@
 {
   "name": "@core/ic-compose",
-  "version": "2.5.1",
+  "version": "2.5.2",
   "description": "实现方法的调用串联",
   "main": "dist/index.js",
   "scripts": {
