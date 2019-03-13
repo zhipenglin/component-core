@@ -1,8 +1,7 @@
 {
-  "name": "@core/ic-args",
+  "name": "@core/ic-static-data",
   "version": "2.5.1",
-  "description": "一种用字符串表示对象的格式，通常用于环境变量的配置",
-  "target": "node",
+  "description": "全局统一的静态数据",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
