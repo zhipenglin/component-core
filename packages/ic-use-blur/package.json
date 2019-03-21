@@ -1,6 +1,6 @@
 {
   "name": "@core/ic-use-blur",
-  "version": "2.5.5",
+  "version": "2.5.6",
   "description": "在复合表单组件中控制blur事件的触发",
   "target": "client",
   "main": "dist/index.js",
