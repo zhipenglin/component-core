@@ -1,6 +1,6 @@
 {
   "name": "@core/ic-fetch-data",
-  "version": "2.5.3",
+  "version": "2.5.5",
   "description": "React获取数据容器",
   "target": "client",
   "main": "dist/index.js",
@@ -9,8 +9,12 @@
   },
   "author": "linzp",
   "license": "ISC",
+  "peerDependencies": {
+    "react": ">=16.8.0",
+    "react-dom": ">=16.8.0"
+  },
   "dependencies": {
-    "@core/ic-ajax": "^2.5.3",
+    "@core/ic-ajax": "^2.5.5",
     "axios": "^0.18.0",
     "lodash": "^4.17.10",
     "object-hash": "^1.3.0"

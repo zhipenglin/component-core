@@ -1,11 +1,15 @@
 {
-  "name": "@core/ic-ajax-error",
+  "name": "@core/ic-use-blur",
   "version": "2.5.5",
-  "description": "处理ajax错误",
+  "description": "在复合表单组件中控制blur事件的触发",
   "target": "client",
   "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "peerDependencies": {
+    "react": ">=16.8.0",
+    "react-dom": ">=16.8.0"
   },
   "author": "admin",
   "license": "ISC"
