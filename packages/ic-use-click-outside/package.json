@@ -1,6 +1,6 @@
 {
   "name": "@core/ic-use-click-outside",
-  "version": "2.5.6",
+  "version": "2.5.7",
   "description": "响应点击空白事件",
   "target": "client",
   "main": "dist/index.js",
