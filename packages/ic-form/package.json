@@ -1,6 +1,6 @@
 {
   "name": "@core/ic-form",
-  "version": "2.5.7",
+  "version": "2.5.8",
   "description": "用于表单校验的组件",
   "target": "client",
   "main": "dist/index.js",
@@ -10,8 +10,8 @@
   "author": "admin",
   "license": "ISC",
   "dependencies": {
-    "@core/ic-cache": "^2.5.7",
-    "@core/ic-compose": "^2.5.7"
+    "@core/ic-cache": "^2.5.8",
+    "@core/ic-compose": "^2.5.8"
   },
   "peerDependencies": {
     "prop-types": "~15.6.1",

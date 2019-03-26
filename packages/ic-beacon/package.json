@@ -1,6 +1,6 @@
 {
   "name": "@core/ic-beacon",
-  "version": "2.5.7",
+  "version": "2.5.8",
   "description": "代码统计代码",
   "target": "client",
   "main": "dist/index.js",
