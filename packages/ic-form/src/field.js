@@ -5,7 +5,7 @@ import validate from './util/validate'
 import compileErrMsg from './util/compileErrMsg'
 import OrderPromise from './util/OrderPromise'
 import getFieldValue from './util/getFieldValue'
-import compose from 'ic-compose'
+import compose from '@core/ic-compose'
 import PropTypes from 'prop-types'
 
 export default compose(withFormData, (WrappedComponent) => {

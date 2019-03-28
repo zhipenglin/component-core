@@ -3,7 +3,7 @@ import FormContext from './Context'
 import cleanObject from './util/cleanObject'
 import getFieldInfo from './util/getFieldInfo'
 import merge from 'lodash/merge'
-import {getCache, setCache, removeCache} from 'ic-cache'
+import {getCache, setCache, removeCache} from '@core/ic-cache'
 import PropTypes from 'prop-types'
 
 class Form extends Component {

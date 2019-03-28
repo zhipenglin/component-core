@@ -76,7 +76,7 @@ var _getFieldValue = require('./util/getFieldValue');
 
 var _getFieldValue2 = _interopRequireDefault(_getFieldValue);
 
-var _icCompose = require('ic-compose');
+var _icCompose = require('@core/ic-compose');
 
 var _icCompose2 = _interopRequireDefault(_icCompose);
 

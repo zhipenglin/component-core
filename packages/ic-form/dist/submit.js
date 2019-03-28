@@ -40,7 +40,7 @@ var _withFormData = require('./withFormData');
 
 var _withFormData2 = _interopRequireDefault(_withFormData);
 
-var _icCompose = require('ic-compose');
+var _icCompose = require('@core/ic-compose');
 
 var _icCompose2 = _interopRequireDefault(_icCompose);
 

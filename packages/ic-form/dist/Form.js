@@ -76,7 +76,7 @@ var _merge = require('lodash/merge');
 
 var _merge2 = _interopRequireDefault(_merge);
 
-var _icCache = require('ic-cache');
+var _icCache = require('@core/ic-cache');
 
 var _propTypes = require('prop-types');
 

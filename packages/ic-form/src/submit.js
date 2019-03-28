@@ -1,6 +1,6 @@
 import React, {PureComponent} from 'react'
 import withFormData from './withFormData'
-import compose from 'ic-compose'
+import compose from '@core/ic-compose'
 
 export default compose(withFormData, (WrappedComponent) => {
     return class Submit extends PureComponent {
